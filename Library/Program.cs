@@ -11,20 +11,37 @@ namespace Library
       private const string AuthorsFilePath = "authors.csv";
       private const string BooksFilePath = "books.csv";
       private const string MagazinesFilePath = "magazines.csv";
+
       static void Main(string[] args)
       {
          //TODO parse CLI arguments
-         //TODO search book/magazine by ISBN
-         //TODO search book/magazine by author
-         //TODO sort books/magazines by title and print
-
+         //TODO write tests
+         
          IBookRepository bookRepository = new BookCsvRepository(BooksFilePath);
          IAuthorRepository authorRepository = new AuthorCsvRepository(AuthorsFilePath);
          IMagazineRepository magazineRepository = new MagazineCsvRepository(MagazinesFilePath);
 
          LibraryService service = new LibraryService(bookRepository, authorRepository, magazineRepository);
 
-         service.PrintAllEntities();
+         Console.WriteLine("--- 1 ---");
+         var allPrintMediaString = string.Join(Environment.NewLine, service.GetAllPrintMedia());
+         Console.WriteLine(allPrintMediaString);
+         Console.WriteLine();
+
+         Console.WriteLine("--- 2 ---");
+         var printMedium = service.FindMediumWithIsbn("5454-5587-3210");
+         Console.WriteLine(printMedium);
+         Console.WriteLine();
+
+         Console.WriteLine("--- 3 ---");
+         var printMediaByAuthor = service.GetPrintMediaByAuthor("pr-gustafsson@optivo.de");
+         var printMediaByAuthorString = string.Join(Environment.NewLine, printMediaByAuthor);
+         Console.WriteLine(printMediaByAuthorString);
+         Console.WriteLine();
+
+         Console.WriteLine("--- 4 ---");
+         var allPrintMediaSortedString = string.Join(Environment.NewLine, service.GetAllPrintMedia().OrderBy(x => x.Title));
+         Console.WriteLine(allPrintMediaSortedString);
       }
    }
 }

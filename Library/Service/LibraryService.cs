@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
+using Library.Domain;
 using Library.Repository;
 
 namespace Library.Service
@@ -17,11 +19,20 @@ namespace Library.Service
          _magazineRepository = magazineRepository;
       }
 
-      public void PrintAllEntities()
+      public PrintMedium FindMediumWithIsbn(string isbn)
       {
-         _bookRepository.GetAllBooks().ToList().ForEach(Console.WriteLine);
-         _authorRepository.GetAllAuthors().ToList().ForEach(Console.WriteLine);
-         _magazineRepository.GetAllMagazines().ToList().ForEach(Console.WriteLine);
+         return GetAllPrintMedia().FirstOrDefault(pm => pm.ISBN == isbn);
+      }
+
+      public IQueryable<PrintMedium> GetPrintMediaByAuthor(string authorEmail)
+      {
+         return GetAllPrintMedia().Where(pm => pm.Authors.Contains(authorEmail));
+      }
+
+      public IQueryable<PrintMedium> GetAllPrintMedia()
+      {
+         return _bookRepository.GetAllBooks().Cast<PrintMedium>()
+            .Concat(_magazineRepository.GetAllMagazines().Cast<PrintMedium>());
       }
    }
 }
