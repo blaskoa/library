@@ -9,7 +9,6 @@ namespace Library.Repository.Csv.ClassMap
       {
          Map(b => b.Title).Name("Title");
          Map(b => b.ISBN).Name("ISBN-Nummber");
-         //TODO map to array of strings
          Map(b => b.AuthorsString).Name("Author");
          Map(b => b.Summary).Name("Summary");
       }

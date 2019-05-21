@@ -2,6 +2,7 @@
 using System.Linq;
 using Library.Repository;
 using Library.Repository.Csv;
+using Library.Service;
 
 namespace Library
 {
@@ -13,8 +14,6 @@ namespace Library
       static void Main(string[] args)
       {
          //TODO parse CLI arguments
-         //TODO load CSV
-         //TODO print all books/magazines
          //TODO search book/magazine by ISBN
          //TODO search book/magazine by author
          //TODO sort books/magazines by title and print
@@ -23,9 +22,9 @@ namespace Library
          IAuthorRepository authorRepository = new AuthorCsvRepository(AuthorsFilePath);
          IMagazineRepository magazineRepository = new MagazineCsvRepository(MagazinesFilePath);
 
-         bookRepository.GetAllBooks().ToList().ForEach(Console.WriteLine);
-         authorRepository.GetAllAuthors().ToList().ForEach(Console.WriteLine);
-         magazineRepository.GetAllMagazines().ToList().ForEach(Console.WriteLine);
+         LibraryService service = new LibraryService(bookRepository, authorRepository, magazineRepository);
+
+         service.PrintAllEntities();
       }
    }
 }
