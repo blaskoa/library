@@ -6,7 +6,7 @@
 
       public override string ToString()
       {
-         return $"Book: {Title}; {ISBN}; {AuthorsString}; {Summary}";
+         return $"Book: {Title}; {ISBN}; {string.Join("|", Authors)}; {Summary}";
       }
    }
 }

@@ -7,7 +7,7 @@ namespace Library.Domain
       public DateTime Released { get; set; }
       public override string ToString()
       {
-         return $"Magazine: {Title}; {ISBN}; {AuthorsString}; {Released:d}";
+         return $"Magazine: {Title}; {ISBN}; {string.Join("|", Authors)}; {Released:d}";
       }
    }
 }

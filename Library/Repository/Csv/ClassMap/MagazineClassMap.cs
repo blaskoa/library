@@ -1,4 +1,5 @@
-﻿using CsvHelper.Configuration;
+﻿using System.Linq;
+using CsvHelper.Configuration;
 using Library.Domain;
 
 namespace Library.Repository.Csv.ClassMap
@@ -9,7 +10,7 @@ namespace Library.Repository.Csv.ClassMap
       {
          Map(m => m.Title).Name("Title");
          Map(m => m.ISBN).Name("ISBN-Nummber");
-         Map(m => m.AuthorsString).Name("Author");
+         Map(b => b.Authors).Name("Author").ConvertUsing(row => row.GetField<string>("Author").Split(",").ToList());
          Map(m => m.Released).Name("Released");
       }
    }

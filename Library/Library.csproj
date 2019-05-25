@@ -11,13 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="authors.csv">
+    <None Update="Data\authors.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="books.csv">
+    <None Update="Data\books.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="magazines.csv">
+    <None Update="Data\magazines.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

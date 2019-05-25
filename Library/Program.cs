@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Library.Repository;
 using Library.Repository.Csv;
@@ -8,6 +9,7 @@ namespace Library
 {
    class Program
    {
+      private const string DataFolder = "Data";
       private const string AuthorsFilePath = "authors.csv";
       private const string BooksFilePath = "books.csv";
       private const string MagazinesFilePath = "magazines.csv";
@@ -17,9 +19,9 @@ namespace Library
          //TODO parse CLI arguments
          //TODO write tests
          
-         IBookRepository bookRepository = new BookCsvRepository(BooksFilePath);
-         IAuthorRepository authorRepository = new AuthorCsvRepository(AuthorsFilePath);
-         IMagazineRepository magazineRepository = new MagazineCsvRepository(MagazinesFilePath);
+         IBookRepository bookRepository = new BookCsvRepository(Path.Combine(DataFolder, BooksFilePath));
+         IAuthorRepository authorRepository = new AuthorCsvRepository(Path.Combine(DataFolder, AuthorsFilePath));
+         IMagazineRepository magazineRepository = new MagazineCsvRepository(Path.Combine(DataFolder, MagazinesFilePath));
 
          LibraryService service = new LibraryService(bookRepository, authorRepository, magazineRepository);
 

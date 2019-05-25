@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Library.Domain
 {
@@ -7,7 +6,6 @@ namespace Library.Domain
    {
       public string ISBN { get; set; }
       public string Title { get; set; }
-      public List<string> Authors => AuthorsString != null ? AuthorsString.Split(",").ToList() : new List<string>();
-      public string AuthorsString { get; set; }
+      public List<string> Authors { get; set; }
    }
 }
