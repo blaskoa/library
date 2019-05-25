@@ -32,5 +32,10 @@ namespace Library.Service
          return _bookRepository.GetAllBooks().Cast<PrintMedium>()
             .Concat(_magazineRepository.GetAllMagazines().Cast<PrintMedium>());
       }
+
+      public IQueryable<PrintMedium> GetAllPrintMediaSorted()
+      {
+         return GetAllPrintMedia().OrderBy(x => x.Title);
+      }
    }
 }

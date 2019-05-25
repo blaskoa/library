@@ -42,7 +42,7 @@ namespace Library
          Console.WriteLine();
 
          Console.WriteLine("--- 4 ---");
-         var allPrintMediaSortedString = string.Join(Environment.NewLine, service.GetAllPrintMedia().OrderBy(x => x.Title));
+         var allPrintMediaSortedString = string.Join(Environment.NewLine, service.GetAllPrintMediaSorted());
          Console.WriteLine(allPrintMediaSortedString);
       }
    }
