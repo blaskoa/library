@@ -1,49 +1,70 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using CommandLine;
+using Library.CommandLineOptions;
+using Library.Domain;
 using Library.Repository;
 using Library.Repository.Csv;
 using Library.Service;
 
 namespace Library
 {
-   class Program
+   public class Program
    {
       private const string DataFolder = "Data";
       private const string AuthorsFilePath = "authors.csv";
       private const string BooksFilePath = "books.csv";
       private const string MagazinesFilePath = "magazines.csv";
 
-      static void Main(string[] args)
+      static int Main(string[] args)
       {
-         //TODO parse CLI arguments
-         //TODO write tests
-         
          IBookRepository bookRepository = new BookCsvRepository(Path.Combine(DataFolder, BooksFilePath));
          IAuthorRepository authorRepository = new AuthorCsvRepository(Path.Combine(DataFolder, AuthorsFilePath));
          IMagazineRepository magazineRepository = new MagazineCsvRepository(Path.Combine(DataFolder, MagazinesFilePath));
 
          LibraryService service = new LibraryService(bookRepository, authorRepository, magazineRepository);
 
-         Console.WriteLine("--- 1 ---");
-         var allPrintMediaString = string.Join(Environment.NewLine, service.GetAllPrintMedia());
+
+         return Parser.Default.ParseArguments<GetAllOptions, FindByAuthorOptions, FindByISBNOptions>(args)
+            .MapResult(
+               (GetAllOptions opts) => RunGetAndReturnExitCode(opts, service),
+               (FindByAuthorOptions opts) => RunFindByAuthorAndReturnExitCode(opts, service),
+               (FindByISBNOptions opts) => RunFindByISBNAndReturnExitCode(opts, service),
+               errs => 1);
+      }
+
+      private static int RunGetAndReturnExitCode(GetAllOptions options, LibraryService service)
+      {
+         IQueryable<PrintMedium> printMedia;
+
+         if (options.Sorted)
+         {
+            printMedia = service.GetAllPrintMediaSorted();
+         }
+         else
+         {
+            printMedia = service.GetAllPrintMedia();
+         }
+
+         var allPrintMediaString = string.Join(Environment.NewLine, printMedia);
          Console.WriteLine(allPrintMediaString);
-         Console.WriteLine();
+         return 0;
+      }
 
-         Console.WriteLine("--- 2 ---");
-         var printMedium = service.FindMediumWithIsbn("5454-5587-3210");
-         Console.WriteLine(printMedium);
-         Console.WriteLine();
-
-         Console.WriteLine("--- 3 ---");
-         var printMediaByAuthor = service.GetPrintMediaByAuthor("pr-gustafsson@optivo.de");
+      private static int RunFindByAuthorAndReturnExitCode(FindByAuthorOptions options, LibraryService service)
+      {
+         var printMediaByAuthor = service.GetPrintMediaByAuthor(options.Email);
          var printMediaByAuthorString = string.Join(Environment.NewLine, printMediaByAuthor);
          Console.WriteLine(printMediaByAuthorString);
-         Console.WriteLine();
+         return 0;
+      }
 
-         Console.WriteLine("--- 4 ---");
-         var allPrintMediaSortedString = string.Join(Environment.NewLine, service.GetAllPrintMediaSorted());
-         Console.WriteLine(allPrintMediaSortedString);
+      private static int RunFindByISBNAndReturnExitCode(FindByISBNOptions options, LibraryService service)
+      {
+         var printMedium = service.FindMediumWithIsbn(options.ISBN);
+         Console.WriteLine(printMedium);
+         return 0;
       }
    }
 }

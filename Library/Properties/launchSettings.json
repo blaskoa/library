@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Library": {
+      "commandName": "Project",
+      "commandLineArgs": "afind -e pr-mueller@optivo.de"
+    }
+  }
+}
