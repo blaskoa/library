@@ -17,14 +17,13 @@ namespace Library
       private const string BooksFilePath = "books.csv";
       private const string MagazinesFilePath = "magazines.csv";
 
-      static int Main(string[] args)
+      public static int Main(string[] args)
       {
          IBookRepository bookRepository = new BookCsvRepository(Path.Combine(DataFolder, BooksFilePath));
          IAuthorRepository authorRepository = new AuthorCsvRepository(Path.Combine(DataFolder, AuthorsFilePath));
          IMagazineRepository magazineRepository = new MagazineCsvRepository(Path.Combine(DataFolder, MagazinesFilePath));
 
          LibraryService service = new LibraryService(bookRepository, authorRepository, magazineRepository);
-
 
          return Parser.Default.ParseArguments<GetAllOptions, FindByAuthorOptions, FindByISBNOptions>(args)
             .MapResult(
@@ -55,7 +54,17 @@ namespace Library
       private static int RunFindByAuthorAndReturnExitCode(FindByAuthorOptions options, LibraryService service)
       {
          var printMediaByAuthor = service.GetPrintMediaByAuthor(options.Email);
-         var printMediaByAuthorString = string.Join(Environment.NewLine, printMediaByAuthor);
+         string printMediaByAuthorString;
+
+         if (printMediaByAuthor.Any())
+         {
+            printMediaByAuthorString = string.Join(Environment.NewLine, printMediaByAuthor);
+         }
+         else
+         {
+            printMediaByAuthorString = $"Author {options.Email} has no print media";
+         }
+          
          Console.WriteLine(printMediaByAuthorString);
          return 0;
       }
@@ -63,7 +72,15 @@ namespace Library
       private static int RunFindByISBNAndReturnExitCode(FindByISBNOptions options, LibraryService service)
       {
          var printMedium = service.FindMediumWithIsbn(options.ISBN);
-         Console.WriteLine(printMedium);
+         if (printMedium != null)
+         {
+            Console.WriteLine(printMedium);
+         }
+         else
+         {
+            Console.WriteLine($"Cannot find print media with ISBN {options.ISBN}");
+         }
+         
          return 0;
       }
    }
